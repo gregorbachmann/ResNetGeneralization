@@ -1,1 +1,1 @@
-# ResNetGeneralization
+# ResNet Generalization
