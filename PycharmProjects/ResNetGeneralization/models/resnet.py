@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import numpy as np
 
 
 class ResNet(nn.Module):
@@ -22,11 +23,14 @@ class ResNet(nn.Module):
                 layer = nn.Linear(in_features=inter_dim, out_features=output_dim, bias=False)
             else:
                 layer = nn.Linear(in_features=inter_dim, out_features=inter_dim, bias=False)
-
+            with torch.no_grad():
+                layer.weight.copy_(torch.randn(size=layer.weight.shape) * np.sqrt(2 / layer.weight.shape[0]))
             self.layers.append(layer)
 
     def forward(self, x):
         x = torch.reshape(x, (-1, self.input_dim))
+        with torch.no_grad():
+            x = nn.functional.normalize(x, p=2, dim=1)
         v1 = [1.0 for _ in range(self.output_dim // 2)]
         v2 = [-1.0 for _ in range(self.output_dim // 2)]
         v = torch.tensor(v1 + v2)
