@@ -2,10 +2,8 @@ import torch
 import torch.optim as optim
 import torch.backends.cudnn as cudnn
 import torch.nn as nn
-from torch.optim import lr_scheduler
 from torch.utils.tensorboard import SummaryWriter
 import os
-import matplotlib.pyplot as plt
 
 from models import ResNet
 from datasets import load_MNIST
@@ -15,8 +13,8 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 binarize = True             # Binarize labels or not
 noise_factor = None         # Probability/Percentage of noise corruption in the labels
-lr = 0.05
-epochs = 10
+lr = 0.01
+epochs = 100
 bs = 128
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -37,7 +35,6 @@ if device == 'cuda':
 
 criterion = nn.functional.binary_cross_entropy_with_logits
 optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9, weight_decay=0e-4)
-exp_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
 # Training
 
